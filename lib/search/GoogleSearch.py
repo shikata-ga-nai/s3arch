@@ -1,7 +1,10 @@
 # Class for Google Web Search Parsing
-from thirdparty.BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
+from lib.connection import *
 import urllib.request
 import urllib.parse
+import re
+
 
 class GoogleSearch:
     headers =  {
@@ -14,7 +17,8 @@ class GoogleSearch:
         'Cache-Control': 'max-age=0',
     }
     
-    url = 'http://www.google.com/search?q={0}&start={1}&num=100&complete=0'
+    url = 'http://www.google.com/'
+    query = 'q={0}&start={1}&num=100&complete=0'
     currentIndex = 100
     
     
@@ -23,14 +27,19 @@ class GoogleSearch:
             self.debug = False
             self.searchString = searchString
             self.html = ''
+            self.requester = Requester("http://www.google.com/")
+            for header, content in (self.headers.items()):
+                self.requester.setHeader(header, content)
     
+
     # Public:
     def getFirstPageLinks(self):
         self.html = self.getHtml(0)
         links = self.parseLinks(self.html)
 
         return links
-        
+   
+
     def getNextPageLinks(self):
         self.initialize()
         self.html = self.getNextPage(self.html)
@@ -60,15 +69,12 @@ class GoogleSearch:
             self.html = self.getHtml(0)
     
     def getHtml(self, index):
-        opener = urllib.request.build_opener()
-        requestUrl = self.url.format(urllib.parse.quote(self.searchString), index * 100)
         if self.debug:
             print('Starting request {0}'.format(requestUrl))
-        request = urllib.request.Request(requestUrl, None, self.headers)
-        result = opener.open(request).read().decode('iso-8859-1')
+        result = self.requester.request("search", params = self.query.format(urllib.parse.quote(self.searchString), index * 100))
         if self.debug:
             print('Request Finished')
-        return result
+        return result.body
         
     def parseLinks(self, html):
         if not(html):
@@ -99,7 +105,7 @@ class GoogleSearch:
         
     def getNextPage(self, html):
         currPage = self.getCurrentPageNumber(html)
-        soup = BeautifulSoup(html, "html.parser")
+        soup = BeautifulSoup(html)
 
         # If no next Link, it's the last page
         img = soup.find('img', attrs = { 'src' : 'nav_next.gif' })
