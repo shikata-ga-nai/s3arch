@@ -18,8 +18,7 @@ class Requester:
 
     def __init__(self, url, cookie=None, useragent=None, maxPool=1, maxRetries=5, timeout=30, ip=None):
         #if no backslash, append one    
-        if url[len(url) - 1] != '/':
-            url = url + '/'
+        if url[-1] is not '/': url = url + '/'
 
 
         parsed = urllib.parse.urlparse(url)
@@ -37,7 +36,7 @@ class Requester:
 
         # Resolve ip address and set host header
         self.host = parsed.netloc.split(':')[0]
-        if ip != None:
+        if ip is not None:
             self.ip = ip
         else:
             try:
@@ -52,9 +51,9 @@ class Requester:
             self.port = None
 
         #Set cookie and user-agent headers
-        if cookie != None:
+        if cookie is not None:
             self.setHeader("Cookie", cookie)
-        if useragent != None:
+        if useragent is not None:
             self.setHeader("User-agent", useragent)
         self.maxRetries = maxRetries
         self.maxPool = maxPool
@@ -68,7 +67,7 @@ class Requester:
 
 
     def getConnection(self):
-        if (self.pool == None):
+        if (self.pool is None):
             if (self.protocol == 'https'):
                 self.pool = HTTPSConnectionPool(self.ip, port=self.port, timeout=self.timeout, maxsize=self.maxPool, block=True, cert_reqs='CERT_NONE',
                                 assert_hostname=False)
@@ -123,3 +122,12 @@ class Requester:
             raise EncodingNotFound('Try using the "encoding" command.')
 
         return to_ret
+
+    def guess_encoding(self, data):
+        for enc in set(encodings.aliases.aliases.values()):
+            try:
+                data.decode(enc)
+                return enc
+            except UnicodeDecodeError:
+                pass
+        return None
