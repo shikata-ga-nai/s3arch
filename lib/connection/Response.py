@@ -15,4 +15,4 @@ class Response:
 
 
     def __eq__(self, other):
-        return (self.headers == other.headers) and (self.body == other.body) and (self.status == other.status11)
+        return (self.status == other.status) and (self.body == other.body)
