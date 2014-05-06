@@ -14,7 +14,7 @@ class ArgumentsParser:
         #Mandatory arguments
         mandatory = OptionGroup(parser, 'Mandatory')
         mandatory.add_option("-q", "--query", help="Search query", action="store", type="string", dest="query", default=None)
-        mandatory.add_option("")
+        #mandatory.add_option("")
 
         #Optional settings
         settings = OptionGroup(parser, 'Optional Settings')
@@ -47,8 +47,8 @@ class ArgumentsParser:
             print("Query is missing!")
             exit(0)
         self.query = options.query
-        if extensions != None: 
-            self.extensions = [extension.strip() for extension in options.extensions.split(",")]
+        if options.extensions != None: 
+            self.extensions = set([extension.strip() for extension in options.extensions.split(",")])
         else:
             self.extensions = None
         self.google = (options.google == True or options.allSearchs == True)
@@ -65,7 +65,7 @@ class ArgumentsParser:
                 self.extensions = self.dynamicContent
             else:
                 self.extensions = self.extensions + self.dynamicContent
-                if (options.dynamic == True):
+                
 
         if (options.static == True):
             if (self.extension == None): 
@@ -74,7 +74,6 @@ class ArgumentsParser:
                 self.extensions = self.extensions + self.static
         
         self.parameters = (options.parameters == True)
-        self.extensions = set(self.extensions)
-
+       
 
 
