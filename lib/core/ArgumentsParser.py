@@ -43,7 +43,7 @@ class ArgumentsParser:
         parser.add_option_group(mandatory)
         parser.add_option_group(settings)
         (options, arguments) = parser.parse_args()
-        if (options.query == None):
+        if (options.query is None):
             print("Query is missing!")
             exit(0)
         self.query = options.query
@@ -53,6 +53,9 @@ class ArgumentsParser:
             self.extensions = None
         self.google = (options.google == True or options.allSearchs == True)
         self.bing = (options.bing == True or options.allSearchs == True)
+        if (self.google is False and self.bing is False):
+            print("Yoy must specify at least one search engine")
+            exit(0)
              
         if (options.dynamic == True):
             if (self.extension == None): 

@@ -74,6 +74,7 @@ class GoogleSearch:
         result = self.requester.request("search", params = self.query.format(urllib.parse.quote(self.searchString), index * 100))
         if self.debug:
             print('Request Finished')
+            
         return result.body
         
     def parseLinks(self, html):
