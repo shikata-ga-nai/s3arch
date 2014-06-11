@@ -20,7 +20,6 @@ class Requester:
         #if no backslash, append one    
         if url[-1] is not '/': url = url + '/'
 
-
         parsed = urllib.parse.urlparse(url)
         self.basePath = parsed.path
 
@@ -28,6 +27,7 @@ class Requester:
         if(parsed.scheme != 'http' and parsed.scheme != 'https'):
             parsed = urllib.parse.urlparse('http://' + url)
             self.basePath = parsed.path
+
         self.protocol = parsed.scheme
 
         if (self.protocol != 'http') and (self.protocol != 'https'): 
@@ -43,6 +43,7 @@ class Requester:
                 self.ip = socket.gethostbyname(self.host)
             except socket.gaierror:
                 raise RequestException({"message" : "Couldn't resolve DNS"})
+
         self.headers['Host'] = self.host
 
         try:
@@ -53,8 +54,10 @@ class Requester:
         #Set cookie and user-agent headers
         if cookie is not None:
             self.setHeader("Cookie", cookie)
+
         if useragent is not None:
             self.setHeader("User-agent", useragent)
+
         self.maxRetries = maxRetries
         self.maxPool = maxPool
         self.timeout = timeout
@@ -90,8 +93,10 @@ class Requester:
                 continue
             finally:
                 i = i + 1
+
         if(i > self.maxRetries):
             raise RequestException({"message" : "There was a problem in the request to: {0}".format(path)})
+
         return result
 
 
@@ -123,6 +128,7 @@ class Requester:
 
         return to_ret
 
+
     def guess_encoding(self, data):
         for enc in set(encodings.aliases.aliases.values()):
             try:
@@ -130,4 +136,5 @@ class Requester:
                 return enc
             except UnicodeDecodeError:
                 pass
+                
         return None

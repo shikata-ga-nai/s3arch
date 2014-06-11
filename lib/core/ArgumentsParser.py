@@ -28,6 +28,10 @@ class ArgumentsParser:
             action="store_true", dest="bing", default=False)
         settings.add_option("-a", "--all", help="Search with All Search Engines", \
             action="store_true", dest="allSearchs", default=False)
+        settings.add_option("-r", "--recursive", help="Search recursively",
+            action="store_true", dest="recursive", default=False)
+        settings.add_option("-n", "--numeric-values", help="Only get with numeric values",
+            action="store_true", dest="numeric", default=False)
         settings.add_option("-d", "--dynamic-content", help="Search dynamic content", \
             action="store_true", dest="dynamic", default=False)
         settings.add_option("-s", "--static-content", help="Search static content", \
@@ -76,6 +80,9 @@ class ArgumentsParser:
             else:
                 self.extensions = self.extensions + self.static
         
+
+        self.recursive = options.recursive
+        self.numeric = options.numeric
         self.parameters = (options.parameters == True)
        
 
