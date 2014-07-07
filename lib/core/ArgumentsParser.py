@@ -14,6 +14,7 @@ class ArgumentsParser:
         #Mandatory arguments
         mandatory = OptionGroup(parser, 'Mandatory')
         mandatory.add_option("-q", "--query", help="Search query", action="store", type="string", dest="query", default=None)
+        mandatory.add_option("-s", "--site", help="Use \"site\" operator", action="store", type="string", dest="site", default=None)
         #mandatory.add_option("")
 
         #Optional settings
@@ -22,6 +23,8 @@ class ArgumentsParser:
             action="store_true", dest="parameters", default=False)
         settings.add_option("-e", "--extensions", help="Extensions list separated by comma (Example: php, asp)", \
             action="store", dest="extensions", default=None)
+        settings.add_option("-c", "--custom-query", help="Custom query to add", \
+            action="store", dest="custom", default=None)
         settings.add_option("-g", "--google", help="Search in Google", \
             action="store_true", dest="google", default=False)
         settings.add_option("-b", "--bing", help="Search in Bing", \
@@ -32,9 +35,9 @@ class ArgumentsParser:
             action="store_true", dest="recursive", default=False)
         settings.add_option("-n", "--numeric-values", help="Only get with numeric values",
             action="store_true", dest="numeric", default=False)
-        settings.add_option("-d", "--dynamic-content", help="Search dynamic content", \
+        settings.add_option("--dynamic", "--dynamic-content", help="Search dynamic content", \
             action="store_true", dest="dynamic", default=False)
-        settings.add_option("-s", "--static-content", help="Search static content", \
+        settings.add_option("--static", "--static-content", help="Search static content", \
             action="store_true", dest="static", default=False)
         # -------------TODO------------------
         #settings.add_option("--domains", "--domains", help="Print founded domains and subdomains", \
@@ -47,10 +50,19 @@ class ArgumentsParser:
         parser.add_option_group(mandatory)
         parser.add_option_group(settings)
         (options, arguments) = parser.parse_args()
-        if (options.query is None):
-            print("Query is missing!")
+
+
+        if (options.query is None and options.site is None):
+            print("-q|--query or -s|--site is missing!")
+            exit(0)
+        if (options.query is not None and options.site is not None):
+            print("-q|--query and -s|--site are not compatible")
+            exit(0)
+        if (options.recursive and options.query is not None):
+            print("-q|--query and -r|--recursive are not compatible (use with -s|--site)")
             exit(0)
         self.query = options.query
+        self.site = options.site
         if options.extensions != None: 
             self.extensions = set([extension.strip() for extension in options.extensions.split(",")])
         else:
@@ -80,8 +92,8 @@ class ArgumentsParser:
             else:
                 self.extensions = self.extensions + self.static
         
-
         self.recursive = options.recursive
+        self.custom = options.custom
         self.numeric = options.numeric
         self.parameters = (options.parameters == True)
        

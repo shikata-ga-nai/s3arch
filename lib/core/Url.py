@@ -1,4 +1,5 @@
 import urllib.parse
+import os.path
 
 class Url(object):
     def __init__(self, url):
@@ -11,14 +12,14 @@ class Url(object):
 
     def __str__(self):
         params = '&'.join(("" if key is "" else key + '=') + ("" if value is None else value) for key, value in self.params.items())
-        return self.scheme + self.netloc + self.path + ('?' + params if params is not "" else "")
+        return self.scheme + "://" + self.netloc + self.path + ('?' + params if params is not "" else "")
 
     def __eq__(self, other):
         return self.params == other.params and self.scheme == other.scheme and self.netloc == other.netloc and self.path == other.path
 
     def getWithoutParamValues(self):
         params = '&'.join(("" if key is "" else key + '=') for key, value in self.params.items())
-        return self.scheme + self.netloc + self.path + ('?' + params if params is not "" else "")
+        return self.scheme + "://" + self.netloc + self.path + ('?' + params if params is not "" else "")
 
     def compareParamNames(self, other):
         return self.paramNames == other.paramNames and self.scheme == other.scheme and self.netloc == other.netloc and self.path == other.path
@@ -28,3 +29,6 @@ class Url(object):
 
     def hasIntegerValue(self):
         return any([value.isdigit() for value in self.params.values()])
+
+    def getDirectory(self):
+        return self.scheme + "://" + self.netloc + os.path.dirname(self.path)
