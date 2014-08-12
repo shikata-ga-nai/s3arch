@@ -1,3 +1,5 @@
+import signal
+import sys
 from lib.core.Url import *
 from lib.search.GoogleSearch import *
 from lib.search.BingSearch import *
@@ -7,6 +9,7 @@ from queue import Queue as queue
 
 class Controller:
     def __init__(self, arguments):
+        signal.signal(signal.SIGINT, self.signalHandler)
         self.arguments = arguments
         self.checked = []
         self.recursiveQueue = queue()
@@ -35,18 +38,17 @@ class Controller:
                 if self.filter(url): print(url)
         if (bing == True):
             print("Searching in bing")
-            for url in  self.getResultsFromSearch(BingSearch(query, False)):
+            for url in  self.getResultsFromSearch(BingSearch(query)):
                 self.addDirectory(url)
                 if self.filter(url): print(url)
 
-            
 
     def getResultsFromSearch(self, search):
-        links = search.getFirstPageLinks()
-        while links:
-            for l in links:         
-                yield Url(l)
-            links = search.getNextPageLinks()
+        results = search.next()
+        while results is not None:
+            for result in results:         
+                yield result.url
+            results = search.next()
 
 
     def filter(self, url):
@@ -66,3 +68,6 @@ class Controller:
             self.recursiveQueue.put(url.getDirectory())
             self.recursiveList.append(url.getDirectory())
     
+    def signalHandler(self, signal, frame):
+        print ("Canceled by the user")
+        sys.exit(0)
