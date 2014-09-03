@@ -35,11 +35,11 @@ class ArgumentsParser:
             action="store_true", dest="recursive", default=False)
         settings.add_option("-n", "--numeric-values", help="Only get with numeric values",
             action="store_true", dest="numeric", default=False)
-        settings.add_option("--dynamic", "--dynamic-content", help="Search dynamic content", \
-            action="store_true", dest="dynamic", default=False)
-        settings.add_option("--static", "--static-content", help="Search static content", \
-            action="store_true", dest="static", default=False)
         # -------------TODO------------------
+        #settings.add_option("--dynamic", "--dynamic-content", help="Search dynamic content", \
+        #    action="store_true", dest="dynamic", default=False)
+        #settings.add_option("--static", "--static-content", help="Search static content", \
+        #    action="store_true", dest="static", default=False)
         #settings.add_option("--domains", "--domains", help="Print founded domains and subdomains", \
         #    action="store_true", dest="domains", default=False)
         #settings.add_option("--seo-urls", "--seo-urls", help="EXPERIMENTAL: try to list SEO urls", \
@@ -73,24 +73,24 @@ class ArgumentsParser:
             print("Yoy must specify at least one search engine")
             exit(0)
              
-        if (options.dynamic == True):
-            if (self.extension == None): 
-                self.extensions = self.dynamicContent
-            else:
-                self.extensions = self.extensions + self.dynamicContent
-
-        if (options.dynamic == True):
-            if (self.extension == None): 
-                self.extensions = self.dynamicContent
-            else:
-                self.extensions = self.extensions + self.dynamicContent
-                
-
-        if (options.static == True):
-            if (self.extension == None): 
-                self.extensions = self.static
-            else:
-                self.extensions = self.extensions + self.static
+#        if (options.dynamic == True):
+#            if (self.extension == None): 
+#                self.extensions = self.dynamicContent
+#            else:
+#                self.extensions = self.extensions + self.dynamicContent
+#
+#        if (options.dynamic == True):
+#            if (self.extension == None): 
+#                self.extensions = self.dynamicContent
+#            else:
+#                self.extensions = self.extensions + self.dynamicContent
+#                
+#
+#        if (options.static == True):
+#            if (self.extension == None): 
+#                self.extensions = self.static
+#            else:
+#                self.extensions = self.extensions + self.static
         
         self.recursive = options.recursive
         self.custom = options.custom
