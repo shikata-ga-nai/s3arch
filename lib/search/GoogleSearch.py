@@ -1,13 +1,13 @@
 # Class for Google Web Search Parsing
 from bs4 import BeautifulSoup
 from lib.core import *
-import urllib.request
 import urllib.parse
 import re
 import urllib
 
 
 class GoogleSearch(BaseSearch):
+    name = "Google"
     headers =  {
         'User-Agent': 'Lynx/2.8.8dev.3 libwww-FM/2.14 SSL-MM/1.4.1',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
