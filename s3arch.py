@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-import urllib.parse
 import sys
+if sys.version_info < (3, 0):
+	sys.stdout.write("Sorry, requires Python 3.x\n")
+	sys.exit(1)
 try:
         from bs4 import BeautifulSoup
 except:
@@ -9,6 +11,7 @@ except:
         print ("or")
         print ("Download from http://www.crummy.com/software/BeautifulSoup/#Download && python3 setup.py install")
         sys.exit (1)
+import urllib.parse
 from lib.search import *
 from lib.core.Controller import Controller
 from lib.core.ArgumentsParser import ArgumentsParser
